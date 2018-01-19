@@ -1,12 +1,14 @@
 package com.hsap.myapplication.aidl;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +27,7 @@ public class AidlActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-                    Log.e(TAG, "handleMessage: "+msg.obj );
+          Log.e(TAG, "handleMessage: "+msg.obj );
                     break;
                     default:
             }
@@ -44,9 +46,9 @@ public class AidlActivity extends AppCompatActivity {
     private ServiceConnection coon=new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+           // new Messenger(service);
             iBookManager = IBookManager.Stub.asInterface(service);
             try {
-
                 List<Book> bookList = iBookManager.getBookList();
                 Log.e(TAG, "onServiceConnected: "+bookList.getClass().getCanonicalName());
                 Log.e(TAG, "onServiceConnected: "+bookList.toString());

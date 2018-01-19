@@ -19,7 +19,6 @@ import com.hsap.myapplication.aidl.Book;
 
 public class ProviderActivity extends AppCompatActivity {
     private static final String TAG = "ProviderActivity";
-    private Uri book=Uri.parse("content://com.hsap.myapplication.book.provider/book");
     private Uri user=Uri.parse("content://com.hsap.myapplication.book.provider/user");
     private String bookNewId;
     private String userNewId;
@@ -34,7 +33,7 @@ public class ProviderActivity extends AppCompatActivity {
         query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor bookCursor = getContentResolver().query(book, new String[]{"_id", "name"}, null, null, null);
+                Cursor bookCursor = getContentResolver().query(MyContentProvider.BOOK_CONTENT_URI, new String[]{"_id", "name"}, null, null, null);
                 while (bookCursor.moveToNext()){
                     Book book = new Book();
                     book.bookId=bookCursor.getInt(0);
@@ -57,7 +56,7 @@ public class ProviderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ContentValues values = new ContentValues();
                 values.put("name","程序设计");
-                Uri bookNewUri = getContentResolver().insert(book, values);
+                Uri bookNewUri = getContentResolver().insert(MyContentProvider.BOOK_CONTENT_URI, values);
                 bookNewId=bookNewUri.getPathSegments().get(1);
                /* Log.e(TAG, "insert: book成功");
                 values.put("name","小军");
@@ -69,14 +68,15 @@ public class ProviderActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri=Uri.parse(book+"/"+bookNewId);//删除添加的数据
+                //删除添加的数据
+                Uri uri=Uri.parse(MyContentProvider.BOOK_CONTENT_URI+"/"+bookNewId);
                 getContentResolver().delete(uri,null,null);
             }
         });
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uribook=Uri.parse(book+"/"+bookNewId);
+                Uri uribook=Uri.parse(MyContentProvider.BOOK_CONTENT_URI+"/"+bookNewId);
                 Uri uriuser=Uri.parse(user+"/"+userNewId);
                 ContentValues values = new ContentValues();
                 values.put("name","aaa");

@@ -24,10 +24,12 @@ public class MessageService extends Service {
             Message msgtoClient = Message.obtain(msgformClient);
             switch (msgtoClient.what){
                 case MSG_SUM:
-                    msgtoClient.what=MSG_SUM;
+                   // msgtoClient.what=MSG_SUM;
                     try {
                         Thread.sleep(2000);
                         msgtoClient.arg2=msgformClient.arg1+msgformClient.arg2;
+                        //客户端的信使发送消息，这样客户端的Messenger可以接受处理
+                        //客户端的Messager发，客户端可接受处理
                         msgformClient.replyTo.send(msgtoClient);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -45,6 +47,7 @@ public class MessageService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+
         return messenger.getBinder();
     }
 }

@@ -62,9 +62,11 @@ public class MessageActivity extends AppCompatActivity {
                 tv.setId(a);
                 ll_message.addView(tv);
                 Message msgFromClient = Message.obtain(null, MessageService.MSG_SUM, a, b);
+               //将客户端的messager一起发送到服务器
                 msgFromClient.replyTo=messenger;
                 if(isConn){
                     try {
+                        //服务器Messenger发送消息，服务器端就可以处理
                         mService.send(msgFromClient);
                     } catch (RemoteException e) {
                         e.printStackTrace();

@@ -89,8 +89,6 @@ public class MyContentProvider extends ContentProvider {
         if (table==null){
             throw new IllegalArgumentException("no uri:"+uri);
         }
-        db.insert(table,null,values);
-        getContext().getContentResolver().notifyChange(uri,null);
         switch (mUriMatcher.match(uri)){
             case BOOK_CODE:
             case BOOK_ITEM:
@@ -104,6 +102,8 @@ public class MyContentProvider extends ContentProvider {
                 break;
                 default:
         }
+        //刷新
+        getContext().getContentResolver().notifyChange(uri,null);
         return uri;
     }
     @Override
@@ -178,12 +178,9 @@ public class MyContentProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)){
             case BOOK_CODE:
                 return "vnd.android.cursor.dir/vnd."+AUTHORITY+".book";
-
             case BOOK_ITEM:
                 return "vnd.android.cursor.item/vnd."+AUTHORITY+".book";
-
             case USER_CODE:
-
                 return "vnd.android.cursor.dir/vnd."+AUTHORITY+".user";
             case USER_ITEM:
                 return "vnd.android.cursor.item/vnd."+AUTHORITY+".user";
