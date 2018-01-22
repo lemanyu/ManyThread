@@ -13,25 +13,16 @@ import android.widget.Button;
 
 import com.hsap.myapplication.R;
 
+import java.lang.ref.WeakReference;
+
 
 public class BinderActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     private static final String TAG = "BinderActivity";
     private BinderPool mBinderPool;
-    private ICalculate mCalculate;
     private int mRect;
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-
-            bt1.setOnClickListener(BinderActivity.this);
-            bt2.setOnClickListener(BinderActivity.this);
-            bt3.setOnClickListener(BinderActivity.this);
-            bt4.setOnClickListener(BinderActivity.this);
-        }
-    };
+    private final Handler mHandler =new MyHandler(this);
     private Button bt1;
     private Button bt2;
     private Button bt3;
@@ -45,7 +36,12 @@ public class BinderActivity extends AppCompatActivity implements View.OnClickLis
         initView();
 
     }
-
+public void toDo(){
+    bt1.setOnClickListener(BinderActivity.this);
+    bt2.setOnClickListener(BinderActivity.this);
+    bt3.setOnClickListener(BinderActivity.this);
+    bt4.setOnClickListener(BinderActivity.this);
+}
     private void getBinderPool() {
         Log.e(TAG, "getBinderPool" );
         new Thread(new Runnable() {
@@ -56,13 +52,6 @@ public class BinderActivity extends AppCompatActivity implements View.OnClickLis
                 mHandler.obtainMessage().sendToTarget();
             }
         }).start();
-       /* new Thread(){
-            @Override
-            public void run() {
-                mBinderPool = BinderPool.getInstance(BinderActivity.this);
-                mHandler.obtainMessage().sendToTarget();
-            }
-        }.start();*/
     }
 
     private void initView() {
@@ -90,7 +79,7 @@ public class BinderActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.bt2:
                 //求差
                 IBinder binder = mBinderPool.queryBinder(BinderPool.BINDER_CALCULATE);
-                mCalculate=ICalculateImpl.asInterface(binder);
+                ICalculate mCalculate = ICalculateImpl.asInterface(binder);
                 Log.e(TAG, "sub: "+(mCalculate.sub(3,5)));
                 break;
             case R.id.bt3:
@@ -117,4 +106,14 @@ public class BinderActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
     }
+    private static class MyHandler extends Handler{
+        private final WeakReference<BinderActivity> mActivity;
+        MyHandler(BinderActivity activity){
+            mActivity=new WeakReference<>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            mActivity.get().toDo();
+        }}
 }

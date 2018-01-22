@@ -30,6 +30,7 @@ public class MessageActivity extends AppCompatActivity {
     private Messenger mService;
     private int mA;
     private Button btn_add;
+
     @SuppressLint("HandlerLeak")
     private Messenger messenger =new Messenger(new Handler(){
         @Override
@@ -44,6 +45,7 @@ public class MessageActivity extends AppCompatActivity {
             super.handleMessage(msgFromServer);
         }
     });
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,4 +108,5 @@ public class MessageActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(conn);
     }
+
 }
